@@ -9,11 +9,13 @@ const dadosUsuarioPadrao = {
 describe('UserService - Suíte de Testes com Smells', () => {
   let userService;
 
-  // O setup é executado antes de cada teste
+   // O setup é executado antes de cada teste
   beforeEach(() => {
     userService = new UserService();
     userService._clearDB(); // Limpa o "banco" para cada teste
   });
+
+  //TEST SMELL: Convidado Misterioso
 
   test('deve criar e buscar um usuário corretamente', () => {
     // Act 1: Criar
@@ -29,6 +31,8 @@ describe('UserService - Suíte de Testes com Smells', () => {
     expect(usuarioBuscado.nome).toBe(dadosUsuarioPadrao.nome);
     expect(usuarioBuscado.status).toBe('ativo');
   });
+
+  // TEST SMELL: Lógica Condicional em Teste
 
   test('deve desativar usuários se eles não forem administradores', () => {
     const usuarioComum = userService.createUser('Comum', 'comum@teste.com', 30);
@@ -52,17 +56,19 @@ describe('UserService - Suíte de Testes com Smells', () => {
   });
 
   test('deve gerar um relatório de usuários formatado', () => {
+  //TEST SMELL: Teste Frágil (Fragile Test)
     const usuario1 = userService.createUser('Alice', 'alice@email.com', 28);
     userService.createUser('Bob', 'bob@email.com', 32);
 
     const relatorio = userService.generateUserReport();
     
-    // Se a formatação mudar (ex: adicionar um espaço, mudar a ordem), o teste quebra.
+     // Se a formatação mudar (ex: adicionar um espaço, mudar a ordem), o teste quebra.
     const linhaEsperada = `ID: ${usuario1.id}, Nome: Alice, Status: ativo\n`;
     expect(relatorio).toContain(linhaEsperada);
     expect(relatorio.startsWith('--- Relatório de Usuários ---')).toBe(true);
   });
-  
+
+  // TEST SMELL: Teste Incompleto / Exceção Não Verificada
   test('deve falhar ao criar usuário menor de idade', () => {
     // Este teste não falha se a exceção NÃO for lançada.
     // Ele só passa se o `catch` for executado. Se a lógica de validação
